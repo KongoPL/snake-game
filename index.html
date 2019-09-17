@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Snake Game</title>
+		<meta charset="utf-8" />
+
+		<script src="snake.js"></script>
+	</head>
+	<body>
+		<canvas width="400" height="400" id="game"></canvas>
+		<script>
+			const game = new SnakeGame( 10, 10 ),
+				renderer = new SnakeGameRenderer( game, document.getElementById( 'game' ) );
+
+			game.init();
+			renderer.init();
+		</script>
+	</body>
+</html>

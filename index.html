@@ -10,7 +10,8 @@
 		<canvas width="400" height="400" id="game"></canvas>
 		<script>
 			const game = new SnakeGame( 10, 10 ),
-				renderer = new SnakeGameRenderer( game, document.getElementById( 'game' ) );
+				renderer = new SnakeGameRenderer( game, document.getElementById( 'game' ) ),
+				input = new KeyboardInput( game );
 
 			game.init();
 			renderer.init();

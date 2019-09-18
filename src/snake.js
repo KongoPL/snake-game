@@ -1,4 +1,4 @@
-class SnakeGame
+export class SnakeGame
 {
 	constructor( mapWidth, mapHeight, defaultSnakeLength = 3, tickSpeed = 250 )
 	{
@@ -10,7 +10,9 @@ class SnakeGame
 		this.gameOver = false;
 		this.snakeWins = false;
 
-		this._movementDirection = [0, -1];
+		this.movementDirection = [0, -1];
+		this.movementToBeSet = null;
+
 		this.snake = []; // [int x, int y][]
 		this.pointPosition = []; // [int x, int y]
 		this._tickInterval = null;
@@ -59,8 +61,6 @@ class SnakeGame
 
 		for ( let i = 1; i < this.defaultSnakeLength; i++ )
 			this.snake.push( [startX, ++startY] );
-
-		console.log( this.snake );
 	}
 
 
@@ -91,7 +91,7 @@ class SnakeGame
 
 	setSnakeDirection( x, y )
 	{
-		this._movementDirection = [x, y];
+		this.movementToBeSet = [x, y];
 	}
 
 
@@ -100,9 +100,18 @@ class SnakeGame
 		if ( this.gameOver )
 			return;
 
+		if ( this.movementToBeSet )
+		{
+			if ( this.movementDirection[0] != -this.movementToBeSet[0]
+				|| this.movementDirection[1] != -this.movementToBeSet[1] )
+				this.movementDirection = this.movementToBeSet;
+
+			this.movementToBeSet = null;
+		}
+
 		this.snake.unshift( [
-			this.snake[0][0] + this._movementDirection[0],
-			this.snake[0][1] + this._movementDirection[1],
+			this.snake[0][0] + this.movementDirection[0],
+			this.snake[0][1] + this.movementDirection[1],
 		] );
 
 		const canCollectPoint = this.canCollectPoint();
@@ -142,7 +151,7 @@ class SnakeGame
 }
 
 
-class SnakeGameRenderer
+export class SnakeGameRenderer
 {
 	constructor( game, canvas )
 	{
@@ -209,11 +218,13 @@ class SnakeGameRenderer
 }
 
 
-class KeyboardInput
+export class KeyboardInput
 {
 	constructor( game )
 	{
 		this._onKeyPress = this._onKeyPress.bind( this );
+
+		this.game = game;
 
 		document.body.addEventListener( 'keydown', this._onKeyPress );
 	}
@@ -230,12 +241,12 @@ class KeyboardInput
 		const keyCode = event.keyCode;
 
 		if ( keyCode == 38 )
-			game.setSnakeDirection( 0, -1 );
+			this.game.setSnakeDirection( 0, -1 );
 		else if ( keyCode == 40 )
-			game.setSnakeDirection( 0, 1 );
+			this.game.setSnakeDirection( 0, 1 );
 		else if ( keyCode == 37 )
-			game.setSnakeDirection( -1, 0 );
+			this.game.setSnakeDirection( -1, 0 );
 		else if ( keyCode == 39 )
-			game.setSnakeDirection( 1, 0 );
+			this.game.setSnakeDirection( 1, 0 );
 	}
 }
